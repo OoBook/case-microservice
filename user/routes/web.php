@@ -2,6 +2,7 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Models\Library;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
@@ -18,8 +19,22 @@ use Illuminate\Support\Facades\Hash;
 
 $router->get('/', function () use ($router) {
 
-    // $user = User::find(1);
-    // dd($user->toArray());
+    // User::create([
+    //     'name' => 'ADMIN',
+    //     'normalized_name' => 'admin',
+    //     'email' => 'oguz.bukcuoglu@gmail.com',
+    //     'password' => Hash::make('111111')
+    // ]);
+    // Library::create([
+    //     'name' => 'West',
+    //     'city' => 'İstanbul'
+    // ]);
+    $user = User::find(1);
+    $library = Library::find(1);
+
+    dd($user->libraries);
+
+    dd( $user->libraries()->attach($library->id));
     $users = User::all();
     dd($users);
     return 'user';

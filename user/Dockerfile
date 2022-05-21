@@ -1,15 +1,17 @@
-FROM php:7.4-fpm-alpine
+FROM php:8.1
 
-RUN apk --update add --virtual build-dependencies build-base openssl-dev autoconf \
-     && pecl install mongodb \
-     && docker-php-ext-enable mongodb
+RUN apt-get update
+
+RUN apt-get install -y autoconf pkg-config libssl-dev
+RUN pecl install mongodb
+RUN echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini
+
      
-RUN docker-php-ext-install pdo pdo_mysql sockets 
-
+RUN docker-php-ext-install pdo pdo_mysql sockets mysqli
 
 RUN curl -sS https://getcomposer.org/installer | php -- \
      --install-dir=/usr/local/bin --filename=composer
 
 WORKDIR /app
 COPY . .
-RUN composer install
+RUN composer install --ignore-platform-reqs

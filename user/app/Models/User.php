@@ -33,6 +33,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function libraries()
     {
-        # code...
+        return $this->belongsToMany( Library::class, "user_library");
+        // return $this->belongsToMany( Library::class, "user_library");
     }
+
+
 }
