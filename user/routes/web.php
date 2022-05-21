@@ -40,3 +40,25 @@ $router->get('/', function () use ($router) {
     return 'user';
     return $router->app->version();
 });
+
+$router->get('/ana-sayfa', 'HomeController@index');
+$router->get('/hata', 'HomeController@error');
+
+$router->group(['prefix' => 'users', 'as' => 'users.'], function() use ($router)
+{
+    $router->get('/', function(){
+        $users = User::all();
+        // dd( view('users.index', compact('users')));
+        return view('users.index', compact('users'));
+    });
+
+});
+// $router->get('/users', 'UserController@index');
+
+$router->post('/users', 'UserController@store');
+$router->get('/users/create', 'UserController@create');
+$router->get('/users/{user}/edit', 'UserController@edit');
+$router->put('/users/{user}', 'UserController@update');
+$router->get('/users/{user}', 'UserController@show');
+$router->delete('/users/{user}', 'UserController@destroy');
+
