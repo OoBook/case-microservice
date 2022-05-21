@@ -2,6 +2,9 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -14,6 +17,11 @@
 */
 
 $router->get('/', function () use ($router) {
+
+    // $user = User::find(1);
+    // dd($user->toArray());
+    $users = User::all();
+    dd($users);
     return 'user';
     return $router->app->version();
 });
