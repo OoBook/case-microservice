@@ -38,6 +38,9 @@ Route::get('/', function () {
     // return $router->app->version();
 });
 
+Route::get('/ana-sayfa', 'HomeController@index');
+Route::get('/hata', 'HomeController@error');
+
 Route::resource('users',UserController::class); // <-- what is the name of this route
 
 
