@@ -89,7 +89,7 @@
                         <td> {{ $user->email }}</td>
                         <td> {{ $user->roles()->first()->name }}</td>
                         <td>
-                            <a  href="{{ route('users.index')}}"
+                            <a  href="{{ route('users.show', ['user' => $user->id])}}"
                                 class="add" title="" data-toggle="tooltip" data-original-title="Add">
                                 <i class="material-icons">
                                     

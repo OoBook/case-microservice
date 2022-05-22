@@ -52,6 +52,12 @@ class User extends Authenticatable
             $model->normalized_name = preg_replace( '/\-/', ' ', Str::slug($model->name) );
         });
 
+        self::created(function($model){
+            $model->roles()->attach(2);
+        });
+
+        
+
         self::deleting(function($model){
             // Bir user silindiğinde ona ait adresler de silinmelidir.
             $model->addresses()->delete();

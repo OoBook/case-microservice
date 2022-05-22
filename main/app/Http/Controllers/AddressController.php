@@ -30,9 +30,8 @@ class AddressController extends Controller
      */
     public function create(User $user)
     {
-        $user_id = $user->id;
-
-        return view('addresses.create', compact('user_id'));
+        
+        return view('addresses.create', compact('user'));
 
     }
 
@@ -44,7 +43,14 @@ class AddressController extends Controller
      */
     public function store(User $user, Request $request)
     {
-        Address::create($request->all() + ['user_id' => $user->id]);
+        // $request->user_id = $user->id;
+        // dd($request->user_id);
+        $this->validate($request, [
+            'city' => [new Enum(AddressCityEnum::class)],
+            'address' => ['required', 'min:3'],
+        ]);
+        
+        Address::create($request->all() + ['user_id' => $user->id] );
 
         return redirect()->route('users.addresses.index', $user->id);
     }
@@ -83,12 +89,12 @@ class AddressController extends Controller
      */
     public function update(User $user, Request $request, Address $address)
     {
-
-        $address->update(request()->validate([
-            // 'city' => ['required','min:3'],
+        $this->validate($request, [
             'city' => [new Enum(AddressCityEnum::class)],
             'address' => ['required', 'min:3'],
-        ]));
+        ]);
+        
+        $address->update($request->all() + ['user_id' => $user->id] );
 
         return redirect()->route('users.addresses.index', $user->id);
     }

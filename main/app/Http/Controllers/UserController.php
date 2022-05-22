@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
+use App\Models\Library;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -120,9 +121,64 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        $libraries = Library::all();
+
+        return view('users.show', compact('libraries', 'user'));
     }
 
+
+    public function syncLibrary(User $user, Request $request )
+    {
+        if( count($request->libraries) > 0 ){
+            
+            if(count($request->libraries) > 3){
+                return redirect()
+                    ->back()
+                    ->withErrors(['library' => 'A user cannot be added to more than three libraries!']);
+            }
+            
+
+            $old_libraries = $user->libraries;
+            $new_libraries = $request->libraries;
+            $removed_libraries = [];
+
+            foreach($old_libraries as $_library){
+                if(!array_key_exists($_library->id, $request->libraries)){
+                    array_push($removed_libraries, $_library->id);
+                }else{
+                    unset($new_libraries[$_library->id]);
+                }
+            }
+            
+            $isAttachable = true;
+            foreach($new_libraries as $i => $nl){
+                $library = Library::find($i);
+
+                if(!$library->canAttach()){
+                    $isAttachable = false;
+                    break;
+                }
+            }
+
+            // dd($old_libraries, $new_libraries, $removed_libraries, $isAttachable);
+            
+            if(!$isAttachable){
+                return redirect()->back()
+                    ->withErrors(['library' => 'No more than 10 users can be added to a library!']);
+            }
+
+            if( count($removed_libraries) ){
+                $user->libraries()->detach($removed_libraries);
+            }
+
+            $user->libraries()->attach(array_keys($new_libraries));
+
+        }else{
+            $user->libraries()->detach();
+        }
+
+        return redirect()->back();
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -133,7 +189,10 @@ class UserController extends Controller
     {
         $roles = Role::all();
 
-        return view('users.edit', compact('user', 'roles'));
+        $libraries = Library::all();
+
+
+        return view('users.edit', compact('user', 'roles', 'libraries'));
     }
 
     /**

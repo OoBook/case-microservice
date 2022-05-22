@@ -43,10 +43,12 @@ Route::get('/hata', 'HomeController@error');
 
 Route::middleware('auth')->group(function () {
 
+    Route::post('users/{user}/libraries', 'UserController@syncLibrary')->name('users.libraries.sync');
     Route::resource('users', UserController::class)->except([
         'edit', 'update', 'destroy'
     ]);
     Route::resource('users.addresses', AddressController::class);
+    Route::resource('libraries', LibraryController::class);
 
     Route::middleware(['role:admin'])->group(function () {
         Route::resource('users', UserController::class)->only([

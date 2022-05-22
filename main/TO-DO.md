@@ -51,12 +51,12 @@ Servislerin iletişim yönteminde bir kısıt yoktur ancak sunumda kullanılan y
 açıklanması beklenmektedir
 
 1) Kütüphane servisinin yazılması
-    a) Kütüphane adı ve bulunduğu şehir verisini içeren ve bu veriye CRUD işlemler
-    yapılabilecek servis beklenmektedir.
+    <!-- a) Kütüphane adı ve bulunduğu şehir verisini içeren ve bu veriye CRUD işlemler
+    yapılabilecek servis beklenmektedir. -->
     <!-- b) Kütüphanelere user’ları bağlayacak şekilde servis yapısının oluşturulması
     beklenmektedir. -->
-    c) Bir kullanıcı en fazla 3 kütüphaneye üye olabilir. Bir kütüphane en fazla 10
-    kullanıcıya hizmet verebilir.
+    <!-- c) Bir kullanıcı en fazla 3 kütüphaneye üye olabilir. Bir kütüphane en fazla 10
+    kullanıcıya hizmet verebilir. -->
 
 2) Bir user’ın üye olduğu kütüphanelere erişebilmeliyim.
 ## Adım 5: Hata Yönetimi ve Güvenlik
@@ -66,9 +66,9 @@ Bu noktada ilk admin hesabı veritabanına elle eklenebilir / güncellenebilir
     <!-- a) Role sadece 2 tane olacak: ADMIN ve USER. Bunlar dışında birşey eklenmek
     istenirse users servisinden “Invalid request body: ROLE” hatası dönmesi
     gerekmektedir. -->
-    b) Password en az 6 karakter ise eklenebilmeli ve büyük harf, küçük harf, sayıdan
+    <!-- b) Password en az 6 karakter ise eklenebilmeli ve büyük harf, küçük harf, sayıdan
     oluşmalı. Bu kurala uymayan bir requestte “Invalid request body: PASSWORD”
-    hatası dönmesi gerekmektedir.
+    hatası dönmesi gerekmektedir. -->
 
 2) Userların yetkilerine erişebilmek adına auth servisi yazılması
     <!-- a) Authentication’ın nasıl yapılacağı konusunda bir kısıt yoktur ancak kullanılan
