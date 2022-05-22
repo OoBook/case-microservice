@@ -41,8 +41,28 @@ Route::get('/', function () {
 Route::get('/ana-sayfa', 'HomeController@index');
 Route::get('/hata', 'HomeController@error');
 
-Route::resource('users',UserController::class); // <-- what is the name of this route
+Route::middleware('auth')->group(function () {
 
+    Route::resource('users', UserController::class)->except([
+        'edit', 'update', 'destroy'
+    ]);
+
+    Route::middleware(['role:admin'])->group(function () {
+        Route::resource('users', UserController::class)->only([
+            'edit', 'update', 'destroy'
+        ]);
+    });
+    // Route::middleware(['role:USER|ADMIN'])->group(function () {
+    //     Route::resource('users', UserController::class)->only([
+    //         'edit', 'show', 'update'
+    //     ]);
+    // });
+});
+
+// Route::resource('users',UserController::class); // <-- what is the name of this route
+// Route::prefix('users')->name('users.')->group(function () {
+
+// });
 
 Auth::routes();
 
