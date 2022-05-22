@@ -9,10 +9,11 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Jenssegers\Mongodb\Eloquent\HybridRelations;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, HybridRelations;
 
     
     /**
@@ -50,10 +51,20 @@ class User extends Authenticatable
         self::creating(function($model){
             $model->normalized_name = preg_replace( '/\-/', ' ', Str::slug($model->name) );
         });
+
+        self::deleting(function($model){
+            // Bir user silindiğinde ona ait adresler de silinmelidir.
+            $model->addresses()->delete();
+        });
     }
 
     public function libraries()
     {
         return $this->belongsToMany( Library::class, "user_library");
+    }
+
+    public function addresses()
+    {
+        return $this->hasMany( Address::class, );
     }
 }

@@ -46,11 +46,15 @@ Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class)->except([
         'edit', 'update', 'destroy'
     ]);
+    Route::resource('users.addresses', AddressController::class);
 
     Route::middleware(['role:admin'])->group(function () {
         Route::resource('users', UserController::class)->only([
             'edit', 'update', 'destroy'
         ]);
+        // Route::resource('users.addresses', AddressController::class)->only([
+        //     'edit', 'update', 'destroy'
+        // ]);
     });
     // Route::middleware(['role:USER|ADMIN'])->group(function () {
     //     Route::resource('users', UserController::class)->only([

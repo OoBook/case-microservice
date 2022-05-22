@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Address;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -21,6 +22,14 @@ class UserController extends Controller
     public function index(Request $request)
     {
         // dd($request->all(), empty($request->all()));
+        $user_ids = [];
+        if($request->city){
+            
+            $user_ids = Address::where('city','LIKE','%'.$request->city.'%')
+                ->get()
+                ->pluck('user_id')
+                ->unique();
+        }
 
         $query = User::where([
             ['normalized_name', '!=', Null],
@@ -48,9 +57,14 @@ class UserController extends Controller
                 }
             ]
         ]);
-        $users = $query->orderBy('')->paginate( 10 );
-        // dd($users);
 
+        if(count($user_ids))
+            $query->where('id', $user_ids);
+
+        $users = $query->without('addresses')->orderBy('name')->paginate( 10 );
+        // dd( Address::all() );
+        // dd($users[0]->addresses[0]);
+        // dd($users, User::find(1));
         // $users = User::query()
         //     ->where('normalized_name', 'LIKE', "%{$search}%")
         //     // ->orWhere('body', 'LIKE', "%{$search}%")
@@ -166,28 +180,4 @@ class UserController extends Controller
 
     }
 
-    public function filter(Request $request, User $user)
-    {
-        $user = $user->newQuery();
-
-        // Search for a user based on their name.
-        if ($request->has('name')) {
-            $user->where('name', $request->input('name'));
-        }
-
-        // Search for a user based on their company.
-        if ($request->has('company')) {
-            $user->where('company', $request->input('company'));
-        }
-
-        // Search for a user based on their city.
-        if ($request->has('city')) {
-            $user->where('city', $request->input('city'));
-        }
-
-        // Continue for all of the filters.
-
-        // Get the results and return them.
-        return $user->get();
-    }
 }

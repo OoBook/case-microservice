@@ -16,27 +16,57 @@
                 <div class="col-sm-12">
                     <form method="GET" class="row" action="{{ route('users.index') }}">
                         <div class="col-md-3 mt-2">
-                          <input type="search" value="{{ request()->name }}" class="form-control rounded" name="name" 
-                            placeholder="Name" aria-label="Search" aria-describedby="search-addon" />
-                        </div>
-                        <button type="submit" class="col-md-2 mt-2 mx-1 btn btn-outline-primary" value="any" name="action">Search</button>
+                            <label>Name</label>
+                            <input type="search" value="{{ request()->name }}" class="form-control rounded" name="name" 
+                                placeholder="Name" aria-label="Search" aria-describedby="search-addon" />
 
-                        <button type="submit" class="col-md-2 mt-2 mx-1 btn btn-outline-primary" value="match" name="action"> 
-                            Tam Arama
-                        </button>
-                        <button type="submit" class="col-md-2 mt-2 mx-1 btn btn-outline-primary" value="pre-match" name="action"> 
-                            Baştan Arama
-                        </button>
-                        <button type="submit" class="col-md-2 mt-2 mx-1 btn btn-outline-primary" value="post-match" name="action"> 
-                            Sondan Arama
-                        </button>
+
+                        </div>
+                        <div class="col-md-3 mt-2">
+                            <label>City</label>
+                            <input type="search" value="{{ request()->city }}" class="form-control rounded" name="city" 
+                              placeholder="City" aria-label="Search" aria-describedby="search-addon" />
+                        </div>
+                        <div class="col-md-3 mt-3">
+                            <label for="">Order</label>
+                            <select name="order-field" id="">
+                                <option value="name">
+                                    Name
+                                </option>
+                                <option value="city">
+                                    City
+                                </option>
+                            </select>
+                            <select name="name-order" id="">
+                                <option value="asc">
+                                    Ascending
+                                </option>
+                                <option value="desc">
+                                    Descending
+                                </option>
+                            </select>
+                        </div>
+
+
+                        <div class="col-12">
+
+                            <button type="submit" class="col-md-2 mt-2 mx-1 btn btn-outline-primary" value="any" name="action">Search</button>
+    
+                            <button type="submit" class="col-md-2 mt-2 mx-1 btn btn-outline-primary" value="match" name="action"> 
+                                Tam Arama
+                            </button>
+                            <button type="submit" class="col-md-2 mt-2 mx-1 btn btn-outline-primary" value="pre-match" name="action"> 
+                                Baştan Arama
+                            </button>
+                            <button type="submit" class="col-md-2 mt-2 mx-1 btn btn-outline-primary" value="post-match" name="action"> 
+                                Sondan Arama
+                            </button>
+                        </div>
                         {{-- <div class="input-group">
                             <select name="city" id="">
 
                             </select>
                         </div> --}}
-
-
                     </form>
                 </div>
             </div>
@@ -81,6 +111,11 @@
                                         {{-- <input type="submit" class="btn btn-danger delete-user" value="Delete user"> --}}
                                 </form>
                             @endrole
+
+                            <a  href="{{ route('users.addresses.index', ['user' => $user->id])}}"
+                                class="" title="" data-toggle="tooltip" data-original-title="Address">
+                                <i class="material-icons">receipt</i>
+                            </a>
 
                         </td>
                     </tr>

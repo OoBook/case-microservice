@@ -20,8 +20,11 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     locales \
     zip \
+    libcurl4-openssl-dev \ 
+    libssl-dev \   
     jpegoptim optipng pngquant gifsicle \
     unzip \
+    pkg-config \ 
     git \
     curl \
     lua-zlib-dev \

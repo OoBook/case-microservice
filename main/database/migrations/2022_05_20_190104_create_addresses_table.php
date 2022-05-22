@@ -13,11 +13,12 @@ class CreateAddressesTable extends Migration
      */
     public function up()
     {
-        Schema::create('addresses', function (Blueprint $table) {
+        Schema::connection('mongodb')->create('addresses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained();
-            $table->enum('city', ['İSTANBUL', 'ANKARA', 'İZMİR']);
-            $table->longText('address');
+            $table->index('user_id');
+            $table->index('city');
+            // $table->enum('city', ['İSTANBUL', 'ANKARA', 'İZMİR']);
+            $table->index('address');
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateAddressesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('addresses');
+        Schema::connection('mongodb')->drop('addresses');
     }
 }
