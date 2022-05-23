@@ -1,7 +1,38 @@
 version: '3.8'
 services:
+  enrich:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    # ports:
+    #   - 80:8080
+    networks:
+      - mynet
+    depends_on:
+      - main_db
+      - library_db
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/nginx/ssl/:/etc/nginx/ssl/
+    depends_on:
+      - enrich
+    networks:
+      - mynet
   main_db:
     image: 'mariadb:latest'
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: main
       MYSQL_USER: root
@@ -15,6 +46,7 @@ services:
       - mynet
   library_db:
     image: 'mariadb:latest'
+    restart: unless-stopped
     environment:
       MYSQL_DATABASE: library
       MYSQL_USER: root
@@ -28,7 +60,7 @@ services:
       - mynet
   phpmyadmin:
     image: 'phpmyadmin:latest'
-    restart: always
+    restart: unless-stopped
     ports:
       - 8080:80
     environment:
@@ -37,6 +69,7 @@ services:
       - mynet
   mongo:
     image: mongo:latest
+    restart: unless-stopped
     container_name: mongo
     ports:
       - "27017:27017"
@@ -60,34 +93,7 @@ services:
       - mynet
     depends_on:
       - mongo
-  enrich:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    working_dir: /var/www/html
-    volumes:
-      - ./:/var/www/html
-    # ports:
-    #   - 80:8080
-    networks:
-      - mynet
-    depends_on:
-      - main_db
-      - library_db
-      - mongo
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    tty: true
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./:/var/www/html
-      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-      - ./docker/nginx/ssl/:/etc/nginx/ssl/
-    networks:
-      - mynet
+
 networks:
   mynet:
     driver: bridge

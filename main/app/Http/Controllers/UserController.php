@@ -24,13 +24,26 @@ class UserController extends Controller
     {
         // dd($request->all(), empty($request->all()));
         $user_ids = [];
-        if($request->city){
+        if($request->city || $request->order_field == 'city'){
             
-            $user_ids = Address::where('city','LIKE','%'.$request->city.'%')
+            if($request->city){
+                $m_query = Address::where('city','LIKE','%'.$request->city.'%');
+            }else{
+                $m_query = Address::query();
+            }
+            
+            if($request->order_field == 'city'){
+                $m_query->orderBy('city', $request->order);
+            }
+
+
+            $user_ids = $m_query
                 ->get()
                 ->pluck('user_id')
                 ->unique();
         }
+
+        // dd($user_ids);
 
         $query = User::where([
             ['normalized_name', '!=', Null],
@@ -49,8 +62,8 @@ class UserController extends Controller
                                 $query->orWhere('normalized_name', $normalized)->get();
 
                                 break;
-                            default:
-                                $query->orWhere('normalized_name', 'like', '%'.$normalized . '%')->get();
+                            case 'any':
+                                $query->orWhere('normalized_name', 'like', '%'.$normalized.'%')->get();
                                 break;
                         }
                     }
@@ -60,16 +73,21 @@ class UserController extends Controller
         ]);
 
         if(count($user_ids))
-            $query->where('id', $user_ids);
+            $query->whereIn('id', $user_ids);
 
-        $users = $query->without('addresses')->orderBy('name')->paginate( 10 );
-        // dd( Address::all() );
-        // dd($users[0]->addresses[0]);
-        // dd($users, User::find(1));
-        // $users = User::query()
-        //     ->where('normalized_name', 'LIKE', "%{$search}%")
-        //     // ->orWhere('body', 'LIKE', "%{$search}%")
-        //     ->paginate(10);
+        if($request->order_field == 'city'){
+            // dd( array_values($user_ids->toArray()), $user_ids->toArray(), $m_query->get());
+            $query->orderByRaw('FIELD (id, ' . implode(', ', array_values($user_ids->toArray()) ) . ') ASC');
+        }
+
+        $query = $query->without('addresses');
+        
+        if($request->order_field == 'name'){
+            $query = $query->orderBy('name', $request->order);
+        }
+        // dd($query, $query->toSql());
+        $users = $query->paginate( 10 );
+
         return view('users.index', compact('users'));
     }   
 

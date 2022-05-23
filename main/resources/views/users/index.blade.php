@@ -29,19 +29,19 @@
                         </div>
                         <div class="col-md-3 mt-3">
                             <label for="">Order</label>
-                            <select name="order-field" id="">
-                                <option value="name">
+                            <select name="order_field" id="">
+                                <option value="name" @if(request()->order_field == 'name') selected @endif>
                                     Name
                                 </option>
-                                <option value="city">
+                                <option value="city" @if(request()->order_field == 'city') selected @endif>
                                     City
                                 </option>
                             </select>
-                            <select name="name-order" id="">
-                                <option value="asc">
+                            <select name="order" id="">
+                                <option value="ASC" @if(request()->order == 'ASC') selected @endif>
                                     Ascending
                                 </option>
-                                <option value="desc">
+                                <option value="DESC" @if(request()->order == 'DESC') selected @endif>
                                     Descending
                                 </option>
                             </select>

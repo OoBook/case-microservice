@@ -16,7 +16,7 @@ Sistemin yapısı genel olarak main/ klasörünün içerisinden başlamaktadır.
 enrich php ortamı için geliştirilmiş bir container. DB yapısı 3'e bölünmüştür, 2 mysql host ve 1 mongodb host olarak 3 DB container'ı vardır. 1. mysql host ana yapıyı user ve roller'i taşımaktadır. 2. mysql host ise library bilgilerini taşımaktadır. 3. olarak mongodb container ise address bilgilerini içermektedir. Laravel içerisinde bununla ilgili
 hybrid yapı kurulmuştur.
 
-Ayrıca mysql veritabanlarını incelemek için aşağıdaki portlarla tarayıcıdan bağlanabilirsiniz.
+Ayrıca mysql ve mongo veritabanlarını incelemek için aşağıdaki portlarla tarayıcıdan bağlanabilirsiniz.
 -   localhost:8080 (phpmyadmin)
     1. main_db
 
@@ -33,7 +33,9 @@ Ayrıca mysql veritabanlarını incelemek için aşağıdaki portlarla tarayıc�
             -   connection name: mongo
             -   port: 27017
             -   database name: mongo
-    
+
+### Note
+3000, 80, 8080, portlarının boşta olduğundan emin olun. 80 portu boşta değilse, local'deki url 80 üzerinden çalışmayacaktır.
 ## Yapı
 
 Proje user, address, library modüllerinden oluşmaktadır. Aşağıda end-pointler listelenmiştir.
