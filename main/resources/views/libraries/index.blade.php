@@ -31,12 +31,6 @@
                         <td> {{ $library->name }}</td>
                         <td> {{ $library->city->value }} </td>
                         <td>
-                            <a  href="{{ route('libraries.index')}}"
-                                class="add" title="" data-toggle="tooltip" data-original-title="Add">
-                                <i class="material-icons">
-                                    
-                                </i>
-                            </a>
                             @role('admin')
                                 <a  href="{{ route('libraries.edit',['library' => $library->id])}}"
                                     class="edit" title="" data-toggle="tooltip" data-original-title="Edit">

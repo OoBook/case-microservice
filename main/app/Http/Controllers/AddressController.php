@@ -96,7 +96,7 @@ class AddressController extends Controller
         
         $address->update($request->all() + ['user_id' => $user->id] );
 
-        return redirect()->route('users.addresses.index', $user->id);
+        return redirect()->route('users.addresses.index', ['user' => $user->id] );
     }
 
     /**

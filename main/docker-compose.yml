@@ -1,36 +1,5 @@
 version: '3.8'
 services:
-  enrich:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    # command: 'php artisan serve --host=0.0.0.0 --port=8080'
-    # restart: unless-stopped
-    working_dir: /var/www/html
-    volumes:
-      - ./:/var/www/html
-    # ports:
-    #   - 80:8080
-    networks:
-      - mynet
-    depends_on:
-      - main_db
-      - library_db
-
-  nginx:
-    image: nginx:alpine
-    container_name: nginx
-    # restart: unless-stopped
-    tty: true
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./:/var/www/html
-      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
-      - ./docker/nginx/ssl/:/etc/nginx/ssl/
-    networks:
-      - mynet
   main_db:
     image: 'mariadb:latest'
     environment:
@@ -44,7 +13,6 @@ services:
       - 33063:3306
     networks:
       - mynet
-
   library_db:
     image: 'mariadb:latest'
     environment:
@@ -70,9 +38,6 @@ services:
   mongo:
     image: mongo:latest
     container_name: mongo
-    # environment:
-    #     - MONGO_INITDB_ROOT_USERNAME=root
-    #     - MONGO_INITDB_ROOT_PASSWORD=root
     ports:
       - "27017:27017"
     volumes:
@@ -81,21 +46,6 @@ services:
       - ./storage/mongodb/production:/Databases/production
     networks:
       - mynet
-  # mongo-express:
-  #   image: mongo-express
-  #   container_name: mexpress
-  #   environment:
-  #     - ME_CONFIG_MONGODB_SERVER=mongo
-  #     - ME_CONFIG_MONGODB_ENABLE_ADMIN=false
-  #     # - ME_CONFIG_MONGODB_ADMINUSERNAME=root
-  #     # - ME_CONFIG_MONGODB_ADMINPASSWORD=root
-  #     - ME_CONFIG_BASICAUTH_USERNAME=mexpress
-  #     - ME_CONFIG_BASICAUTH_PASSWORD=mexpress
-  #   links:
-  #     - mongo
-  #   # restart: unless-stopped
-  #   ports:
-  #     - "8082:8082"
   mongo-webui:
     image: mongoclient/mongoclient
     environment:
@@ -110,7 +60,34 @@ services:
       - mynet
     depends_on:
       - mongo
-
+  enrich:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    # ports:
+    #   - 80:8080
+    networks:
+      - mynet
+    depends_on:
+      - main_db
+      - library_db
+      - mongo
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    tty: true
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./docker/nginx/ssl/:/etc/nginx/ssl/
+    networks:
+      - mynet
 networks:
   mynet:
     driver: bridge

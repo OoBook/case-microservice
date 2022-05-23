@@ -49,14 +49,17 @@ class User extends Authenticatable
         parent::boot();
 
         self::creating(function($model){
-            $model->normalized_name = preg_replace( '/\-/', ' ', Str::slug($model->name) );
+            // $model->normalized_name = preg_replace( '/\-/', ' ', Str::slug($model->name) );
+            $model->normalized_name = static::normalize($model->name);
         });
 
         self::created(function($model){
             $model->roles()->attach(2);
         });
 
-        
+        self::updating(function($model){
+            $model->normalized_name = static::normalize($model->name);
+        });
 
         self::deleting(function($model){
             // Bir user silindiğinde ona ait adresler de silinmelidir.
@@ -72,5 +75,9 @@ class User extends Authenticatable
     public function addresses()
     {
         return $this->hasMany( Address::class, );
+    }
+
+    public static function normalize($string){
+        return preg_replace( '/\-/', ' ', Str::slug($string) );
     }
 }

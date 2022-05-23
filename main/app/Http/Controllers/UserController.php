@@ -107,6 +107,7 @@ class UserController extends Controller
         $user = User::create(request()->validate([
             'name' => ['required','min:3'],
             'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:6', 'confirmed', 'regex:/^[a-zA-Z0-9]*$/'],
             'role_id' => ['exists:roles,id']
         ]));
 

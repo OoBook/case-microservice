@@ -1,64 +1,88 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Enrich microservices
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Başlarken
 
-## About Laravel
+Microservice yapısını geliştirirken öncelikle Lumen framework ile geliştirmeye başlanmıştır, ancak isterlerin daha sonra netleşmesinden ötürü projenin lumen'e değil Laravel'e uygun olduğu görülmüştür. Bu yüzden projenin ortasında lumen'den laravel'e upgrade edilmiştir. Lumen projesi de silinmemiştir, root path'de user klasörü lumen main/ klasörü laravel projesi olarak durmaktadır. Örnek projenin nasıl başlandığı ve nasıl devam edildiğinin anlaşılması için incelenebilir.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistemin yapısı genel olarak main/ klasörünün içerisinden başlamaktadır. Buradaki laravel projesi docker üzerinde çalışacak şekilde konfigüre edilmiştir. Container listesi şu şekildedir
+-   enrich (php-fpm)
+-   nginx
+-   main_db (mariadb)
+-   library_db (mariadb)
+-   phpmyadmin
+-   mongo
+-   mongo-webui
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+enrich php ortamı için geliştirilmiş bir container. DB yapısı 3'e bölünmüştür, 2 mysql host ve 1 mongodb host olarak 3 DB container'ı vardır. 1. mysql host ana yapıyı user ve roller'i taşımaktadır. 2. mysql host ise library bilgilerini taşımaktadır. 3. olarak mongodb container ise address bilgilerini içermektedir. Laravel içerisinde bununla ilgili
+hybrid yapı kurulmuştur.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+Ayrıca mysql veritabanlarını incelemek için aşağıdaki portlarla tarayıcıdan bağlanabilirsiniz.
+-   localhost:8080 (phpmyadmin)
+    1. main_db
 
-## Learning Laravel
+            -   host: main_db
+            -   username: root
+            -   password: root
+    2. library_db
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+            -   host: main_db
+            -   username: root
+            -   password: root
+-   localhost:3000 (mongodb) (connection kaydedin.)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+            -   connection name: mongo
+            -   port: 27017
+            -   database name: mongo
+    
+## Yapı
 
-## Laravel Sponsors
+Proje user, address, library modüllerinden oluşmaktadır. Aşağıda end-pointler listelenmiştir.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+-   /users
+-   /users/{user}/addresses/{address}
+-   /libraries
 
-### Premium Partners
+address modülü user içine nested olarak eklenmiştir. Library modülü User tarafından abone olacak şekilde tasarlanmıştır. User list tablosundan address eklenecek ve library'e kayıt yapacak şekilde tasarlanmıştır. Library modülünün veritabanı ayrı bir container host'da tutulmaktadır.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+/login sayfasından aşağıdaki credentials ile giriş yapabilirsiniz.
+ADMIN ROLE
+    
+    -   admin@gmail.com
+    -   111111
 
-## Contributing
+USER ROLE
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    -   test@gmail.com
+    -   111111
 
-## Code of Conduct
+/register sayfasından kayıt yapabilirsiniz, default olarak role USER olacaktır.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Docker Run
 
-## Security Vulnerabilities
+Docker projesinin konfigürasyonları, docker-compose.yml içerisinde yapılmıştır. Öncelikle container'ları oluşturmak için aşağıdaki komutları takip ediyoruz.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bat
+    cd main
+    docker-compose up -d
+```
 
-## License
+Container'ları ayağa kaldırdıktan sonra aşağıdaki komutla enrich container'ına girdikten sonra sıralı olarak komutları çalıştırın.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+```bat
+    docker-compose exec enrich bash
+```
+
+```bat
+    composer install --ignore-platform-reqs
+    php artisan key:generate
+    cp .env.example .env
+    php artisan migrate -seed
+```
+
+## Unit Testing
+
+Bütün işlemler tamamlandıktan sonra, test işlemleri için yine enrich container'ı içinden şu komutu çalıştırıp test sonuçlarını gözlemleyin.
+
+```bat
+    php artisan test
+```

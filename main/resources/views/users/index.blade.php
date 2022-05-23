@@ -10,7 +10,7 @@
                 <div class="col-sm-8"><h2> User <b>List</b></h2></div>
                 
                 <div class="col-md-4"></div>
-                    <a href="{{ route('users.create') }}" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a>
+                    {{-- <a href="{{ route('users.create') }}" class="btn btn-info add-new"><i class="fa fa-plus"></i> Add New</a> --}}
                 </div>
 
                 <div class="col-sm-12">

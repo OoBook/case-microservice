@@ -19,7 +19,7 @@ class LibraryFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->title,
+            'name' => $this->faker->name(),
             'city' => AddressCityEnum::cases()[rand(0,2)]->value
             // 'email' => $this->faker->unique()->safeEmail(),
             // 'email_verified_at' => now(),

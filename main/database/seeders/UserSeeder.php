@@ -19,12 +19,14 @@ class UserSeeder extends Seeder
     {
         $data = [
             [
-                'name' => 'ADMINISTRATOR',
+                'name' => 'ADMIN USER',
+                'normalized_name' => User::normalize('ADMIN USER'),
                 'email' => 'admin@gmail.com',
                 'password' => bcrypt('111111')
             ],
             [
-                'name' => 'TEST      USER',
+                'name' => 'TEST    USER',
+                'normalized_name' => User::normalize('TEST    USER'),
                 'email' => 'test@gmail.com',
                 'password' => bcrypt('111111')
             ]
@@ -50,8 +52,7 @@ class UserSeeder extends Seeder
 
         
         foreach ($data as $model) {
-            // dd($model);
-            User::create($model);
+            User::insert($model);
         }
 
         $role1 = Role::create(['name' => 'admin']);

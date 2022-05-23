@@ -15,7 +15,7 @@
         </div>
 
         @include('components.user-form', [
-            'action_url' => route('users.create'),
+            'action_url' => route('users.store'),
             'submit_text' => 'CREATE',
             'roles' => $roles,
         ])
