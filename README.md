@@ -76,8 +76,8 @@ Container'ları ayağa kaldırdıktan sonra aşağıdaki komutla enrich containe
 
 ```bat
     composer install --ignore-platform-reqs
-    php artisan key:generate
     cp .env.example .env
+    php artisan key:generate
     php artisan migrate -seed
 ```
 
