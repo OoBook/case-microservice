@@ -81,6 +81,7 @@ services:
       - mynet
   mongo-webui:
     image: mongoclient/mongoclient
+    restart: unless-stopped
     environment:
       - ROOT_URL=http://localhost
       - MONGO_URL=mongodb://mongo:27017/

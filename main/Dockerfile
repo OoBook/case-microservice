@@ -61,9 +61,9 @@ RUN pecl install mongodb
 RUN echo "extension=mongodb.so" >> /usr/local/etc/php/conf.d/mongodb.ini
 
 # Deployment steps
-# RUN composer install --ignore-platform-reqs
-RUN chmod +x /var/www/html/docker/run.sh
-RUN /var/www/html/docker/run.sh
+
+RUN [ -d /var/www/html/storage/mongodb ] || mkdir /var/www/html/storage/mongodb \
+    [ -d /var/www/html/storage/dbdata ] || mkdir /var/www/html/storage/dbdata 
 # ENTRYPOINT ["/var/www/docker/run.sh"]
 
 # Remove Cache
